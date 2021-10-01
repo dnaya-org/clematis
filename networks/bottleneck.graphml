@@ -17,7 +17,9 @@
     <node id="n1"/>
     <node id="n2"/>
     <node id="n3"/>
-    <node id="n4"/>
+    <node id="n4">
+      <data key="d1">0.8</data>
+    </node>
     <node id="n5"/>
     <node id="n6"/>
     <node id="n7"/>
