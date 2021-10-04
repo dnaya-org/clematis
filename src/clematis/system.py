@@ -58,29 +58,24 @@ class System:
             else:
                 self._state[i] = 'working'
 
-            if self._state[i] == 'working':
+            if self._state[i] == 'working' and self._rng.random() > frate[i]:
 
-                if self._rng.random() < frate[i]:
-                    continue
-
+                # Calculate production
                 production = prate[i]
                 if len(in_edges) > 0:
                     production = min(
                         production, np.min(
                             self._buffer[in_edges]))
                 if len(out_edges) > 0:
-                    eligible = np.array(out_edges)[
-                        self._buffer[out_edges] < buffer_size[out_edges]]
-                    assert len(eligible) > 0
-                    to = self._rng.choice(eligible, 1)[0]
                     production = min(
-                        production, buffer_size[to] - self._buffer[to])
+                        production, np.max(buffer_size[out_edges] - self._buffer[out_edges]))
 
+                # Produce!
                 if len(in_edges) > 0:
                     self._buffer[in_edges] = self._buffer[in_edges] - production
 
                 if len(out_edges) > 0:
-                    self._buffer[to] = self._buffer[to] + production
+                    self._buffer[out_edges] = np.minimum(buffer_size[out_edges], self._buffer[out_edges] + production)
                 else:
                     total_production = total_production + production
 
